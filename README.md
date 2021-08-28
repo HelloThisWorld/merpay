@@ -43,7 +43,16 @@ A Java coding skill test for Merpay backend's/DataPlatform.
 {
     "topic": "<TOPIC_NAME>",
     "client": "<SUB_CLIENT_NAME>",
-    "msgId": <MSG_ID>
+    "msgId": long number id
 }
 ```
+#### Check in DB
+`http://localhost:8888/`
 
+server is your local router ip e.x. `192.168.x.x`
+
+user name is `root`
+
+pass word is `root`
+
+db is `merpay`
