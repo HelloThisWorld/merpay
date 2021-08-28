@@ -56,3 +56,11 @@ user name is `root`
 pass word is `root`
 
 db is `merpay`
+
+## Architecture
+<img src="./image/phase1.jpg" width="400px">
+
+- Web application is based in Spring boot
+- DB is using MySql
+- Each topic will create a dedicated table
+- Client use RESTful http endpoint to access the server API
