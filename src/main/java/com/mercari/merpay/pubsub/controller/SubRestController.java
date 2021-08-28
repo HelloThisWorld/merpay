@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/rest/api")
 public class SubRestController {
-    @GetMapping("/reg-topic")
+    @GetMapping("/hello")
     public String hello(HttpServletRequest request) {
         return "Hello wala";
     }
