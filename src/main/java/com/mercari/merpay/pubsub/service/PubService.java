@@ -3,10 +3,12 @@ package com.mercari.merpay.pubsub.service;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
+import java.sql.Timestamp;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.mercari.merpay.pubsub.connector.DBConnector;
+import com.mercari.merpay.pubsub.model.Message;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,6 +36,16 @@ public class PubService {
             LOOGER.error("input name error!", e);
             return false;
         }
+    }
+
+    public boolean publishMessage(Message jsonBody) {
+        Message message = new Message();
+        message.setTopic(jsonBody.getTopic());
+        message.setClient(jsonBody.getClient());
+        message.setContent(jsonBody.getContent());
+        message.setCreateTime(new Timestamp(System.currentTimeMillis()));
+
+        return dbConnector.insertMessage(message);
     }
 
     private boolean validName(String name) {
