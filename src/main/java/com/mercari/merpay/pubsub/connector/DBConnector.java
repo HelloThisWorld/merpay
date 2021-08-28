@@ -75,12 +75,12 @@ public class DBConnector {
 
     public Message getMessageFromQueue(String topic, String client) {
         String subTimeSql = "SELECT subscribeTime FROM topic_subscribe WHERE queue = ? AND client = ?";
-        long lastAckId = getLastAckIdByQueue(topic);
         Timestamp subTime = jdbcTemplate.queryForObject(subTimeSql, Timestamp.class, topic, client);
 
-        String messageSql = String
-                .format("SELECT * FROM %s WHERE msgId > ? AND createTime > ? ORDER BY msgId ASC LIMIT 1", topic);
-        return jdbcTemplate.queryForObject(messageSql, getRowMapper(topic), lastAckId, subTime);
+        String messageSql = String.format(
+                "SELECT * FROM %s WHERE msgId NOT IN (SELECT msgId FROM receipt WHERE queue = ? AND client = ? ) AND createTime > ? ORDER BY msgId ASC LIMIT 1",
+                topic);
+        return jdbcTemplate.queryForObject(messageSql, getRowMapper(topic), topic, client, subTime);
     }
 
     public boolean insertToAck(Message message) {
@@ -120,11 +120,6 @@ public class DBConnector {
     private boolean isClientLegalToSubscribe(String topic, String client) {
         String sql = "SELECT COUNT(*) FROM topic_subscribe WHERE queue = ? AND client = ?";
         return jdbcTemplate.queryForObject(sql, Integer.class, topic, client) <= 0;
-    }
-
-    private long getLastAckIdByQueue(String topic) {
-        String sql = "SELECT msgId FROM receipt WHERE queue = ? ORDER BY msgId DESC LIMIT 1";
-        return jdbcTemplate.queryForObject(sql, Long.class, topic);
     }
 
     private boolean isAcked(String topic, long msgId) {
