@@ -11,21 +11,23 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import reactor.core.publisher.Mono;
+
 @RestController
-@RequestMapping("/sync/")
-public class PubRestController {
+@RequestMapping("/")
+public class ReactivePubController {
     @Autowired
     private PubService pubservcie;
 
     @GetMapping("topic/register")
-    public boolean registerTopic(@RequestParam(name = "topic", required = true) String topic,
+    public Mono<Boolean> registerTopic(@RequestParam(name = "topic", required = true) String topic,
             @RequestParam(name = "client", required = true) String client,
             @RequestParam(name = "size", required = false, defaultValue = "0") int size) {
-        return pubservcie.registerTopic(topic, client, size);
+        return pubservcie.reactiveRegisterTopic(topic, client, size);
     }
 
     @PostMapping(value = "message/publish", consumes = "application/json", produces = "application/json")
-    public boolean pubMessage(@RequestBody Message body) {
-        return pubservcie.publishMessage(body);
+    public Mono<Boolean> pubMessage(@RequestBody Message body) {
+        return pubservcie.reactivePublishMessage(body);
     }
 }

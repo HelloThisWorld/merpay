@@ -64,3 +64,24 @@ db is `merpay`
 - DB is using MySql
 - Each topic will create a dedicated table
 - Client use RESTful http endpoint to access the server API
+
+
+# Phase 2
+## The enhansment points
+- High performance
+- High Availability
+
+## Solution
+### High performance
+- Use spring netty to replace traditional embaded tomcat model
+- Use WebFlux to replace sync API
+  - Netty WebFlux tremendously increasing the server throttle limitation
+
+### High Availability
+- Introduce zookeeper
+- Start a marster/follower mode of the service
+  - marster node can read and write, follower only can read
+  - when marster node down follower node will be actived, but no write action allowed untill marster node back
+
+### API usage
+All the API upgrated to reactive version, old API be moved to `/sync/` directory 

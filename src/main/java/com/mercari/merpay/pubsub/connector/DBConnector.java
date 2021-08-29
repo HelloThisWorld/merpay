@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
@@ -80,7 +81,14 @@ public class DBConnector {
         String messageSql = String.format(
                 "SELECT * FROM %s WHERE msgId NOT IN (SELECT msgId FROM receipt WHERE queue = ? AND client = ? ) AND createTime > ? ORDER BY msgId ASC LIMIT 1",
                 topic);
-        return jdbcTemplate.queryForObject(messageSql, getRowMapper(topic), topic, client, subTime);
+
+        try {
+            return jdbcTemplate.queryForObject(messageSql, getRowMapper(topic), topic, client, subTime);
+        } catch (EmptyResultDataAccessException e) {
+            LOOGER.warn("Queue '{}'' is empty", topic);
+            return new Message(topic, client, "Queue is empty", -1, null);
+        }
+
     }
 
     public boolean insertToAck(Message message) {

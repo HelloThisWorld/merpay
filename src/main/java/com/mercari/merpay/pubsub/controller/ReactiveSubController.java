@@ -11,26 +11,28 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import reactor.core.publisher.Mono;
+
 @RestController
-@RequestMapping("/sync/")
-public class SubRestController {
+@RequestMapping("/")
+public class ReactiveSubController {
     @Autowired
     private SubService subService;
 
     @GetMapping("topic/subscribe")
-    public boolean subTopic(@RequestParam(name = "topic", required = true) String topic,
+    public Mono<Boolean> subTopic(@RequestParam(name = "topic", required = true) String topic,
             @RequestParam(name = "client", required = true) String client) {
-        return subService.subscribeTopic(topic, client);
+        return subService.reactiveSubscribeTopic(topic, client);
     }
 
     @GetMapping("message/get")
-    public Message getMessage(@RequestParam(name = "topic", required = true) String topic,
+    public Mono<Message> getMessage(@RequestParam(name = "topic", required = true) String topic,
             @RequestParam(name = "client", required = true) String client) {
-        return subService.getMessage(topic, client);
+        return subService.reactiveGetMessage(topic, client);
     }
 
     @PostMapping(value = "message/ack", consumes = "application/json", produces = "application/json")
-    public boolean ackMessage(@RequestBody Message body) {
-        return subService.ackMessage(body);
+    public Mono<Boolean> ackMessage(@RequestBody Message body) {
+        return subService.reactiveAckMessage(body);
     }
 }
