@@ -78,10 +78,14 @@ db is `merpay`
   - Netty WebFlux tremendously increasing the server throttle limitation
 
 ### High Availability
-- Introduce zookeeper
-- Start a marster/follower mode of the service
-  - marster node can read and write, follower only can read
-  - when marster node down follower node will be actived, but no write action allowed untill marster node back
+- Deplyed to Kubernetes
+- Start an autoscalling servcie by cpu usage
+  - Define Kubernetes deployment file in ./deployment.yml
+  - When cpu useage up to 70% will trigger autoscalling
+  - Minimum instance is 1 and maximum is 5
+
+### Hot to run
+Same as the phase1
 
 ### API usage
 All the API upgrated to reactive version, old API be moved to `/sync/` directory 

@@ -85,7 +85,7 @@ public class DBConnector {
         try {
             return jdbcTemplate.queryForObject(messageSql, getRowMapper(topic), topic, client, subTime);
         } catch (EmptyResultDataAccessException e) {
-            LOOGER.warn("Queue '{}'' is empty", topic);
+            LOOGER.warn("Queue '{}' is empty", topic);
             return new Message(topic, client, "Queue is empty", -1, null);
         }
 

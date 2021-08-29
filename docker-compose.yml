@@ -17,12 +17,11 @@ services:
     ports:
       - 8888:8080
 
-  # merpay-pubsub-server:
-  #       build: .
-  #       depends_on:
-  #       - mysql-db
-  #       environment:
-  #           - SPRING_DATASOURCE_URL=jdbc:mysql://mysql-db:3306/merpay?characterEncoding=utf8&useSSL=false
-  #           - SPRING_R2DBC_URL=r2dbc:pool:mysql://mysql-db:3306/merpay?characterEncoding=utf8&useSSL=false
-  #       ports:
-  #           - 8090:8090
+  merpay-pubsub-server:
+        build: .
+        depends_on:
+        - mysql-db
+        environment:
+            - SPRING_DATASOURCE_URL=jdbc:mysql://mysql-db:3306/merpay?characterEncoding=utf8&useSSL=false
+        ports:
+            - 8090:8090
